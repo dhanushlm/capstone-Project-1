@@ -1,34 +1,21 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "website:${env.BRANCH_NAME}-${BUILD_NUMBER}"
-    }
-
     stages {
-        stage('Build') {
+        stage('Pull Code') {
             steps {
-                echo "Building image on branch: ${env.BRANCH_NAME}"
-                sh 'docker build -t $IMAGE_NAME .'
+                git branch: 'master', url: 'https://github.com/dhanushlm/capstone-Project-1.git'
             }
         }
 
-        stage('Test') {
+        stage('Deploy to Prod Server') {
             steps {
-                echo "Running test stage"
-                // Placeholder: we’ll run this on the test agent soon
-            }
-        }
-
-        stage('Deploy to Prod') {
-            when {
-                branch 'master'
-            }
-            steps {
-                echo "Deploying to prod (only for master)"
-                // Placeholder: we’ll run this on the prod agent soon
+                sshagent (credentials: ['ansible-key-dhanush-prod1']) {
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no ubuntu@3.84.86.33 'rm -rf ~/website && git clone https://github.com/dhanushlm/capstone-Project-1.git website'
+                    '''
+                }
             }
         }
     }
 }
-
