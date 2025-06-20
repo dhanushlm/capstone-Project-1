@@ -10,7 +10,7 @@ pipeline {
 
         stage('Deploy to Test Server') {
             steps {
-                sshagent (credentials: ['ansible-key']) {
+                sshagent (credentials: ['ansible-key-dhanush-test']) {
                     sh '''
                     ssh -o StrictHostKeyChecking=no ubuntu@18.233.224.181 'rm -rf ~/website && git clone https://github.com/dhanushlm/capstone-Project-1.git website'
                     '''
