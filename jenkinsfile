@@ -11,13 +11,13 @@ pipeline {
         stage('Deploy to Test Server') {
             steps {
                 script {
-                    def testServer = "ubuntu@54.166.103.54"  // Replace with actual IP
-                    def keyPath = "/home/ansible/.ssh/id_rsa"          // Adjust if different
+                    def testServer = "ubuntu@54.166.103.54"
+                    def keyPath = "/home/ansible/.ssh/id_rsa"
 
                     sh """
-                        echo "Creating remote directory if not exists..."
+                        echo "Creating remote directory..."
                         ssh -o StrictHostKeyChecking=no -i ${keyPath} ${testServer} 'mkdir -p ~/test-deploy'
-                        
+
                         echo "Copying code to Test Server..."
                         scp -o StrictHostKeyChecking=no -i ${keyPath} -r * ${testServer}:~/test-deploy/
                     """
