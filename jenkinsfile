@@ -13,7 +13,8 @@ pipeline {
                 echo 'Deploying code to Test Server'
                 sh '''
                 mkdir -p /home/ubuntu/test-deploy/
-                cp -r * /home/ubuntu/test-deploy/
+                cp -r * ~/test-deploy/
+
                 '''
             }
         }
