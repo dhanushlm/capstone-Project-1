@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'test' }
+    agent { label 'Test' }   // ✅ Use your test node label here
 
     stages {
         stage('Clone Code') {
@@ -10,9 +10,10 @@ pipeline {
 
         stage('Deploy to Test Server') {
             steps {
+                echo 'Deploying code to Test Server'
                 sh '''
-                    echo "Deploying code to Test Server"
-                    cp -r * /home/ubuntu/test-deploy/
+                mkdir -p /home/ubuntu/test-deploy/
+                cp -r * /home/ubuntu/test-deploy/
                 '''
             }
         }
