@@ -1,23 +1,21 @@
 pipeline {
-    agent any
+    agent { label 'test' }
 
     stages {
-        stage('Pull Code') {
+        stage('Clone Code') {
             steps {
-                git branch: 'test', url: 'https://github.com/dhanushlm/capstone-Project-1.git'
+                git branch: 'develop', url: 'https://github.com/dhanushlm/capstone-Project-1.git'
             }
         }
 
         stage('Deploy to Test Server') {
             steps {
-                sshagent (credentials: ['ansible-key-dhanush-test']) {
-                    sh '''
-                    ssh -o StrictHostKeyChecking=no ubuntu@18.233.224.181 'rm -rf ~/website && git clone https://github.com/dhanushlm/capstone-Project-1.git website'
-                    '''
-                }
+                sh '''
+                    echo "Deploying code to Test Server"
+                    cp -r * /home/ubuntu/test-deploy/
+                '''
             }
         }
     }
 }
-
 
