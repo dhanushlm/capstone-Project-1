@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'Test' }   // ✅ Use your test node label here
+    agent any
 
     stages {
         stage('Clone Code') {
@@ -10,14 +10,19 @@ pipeline {
 
         stage('Deploy to Test Server') {
             steps {
-                echo 'Deploying code to Test Server'
-                sh '''
-                mkdir -p /home/ubuntu/test-deploy/
-                cp -r * ~/test-deploy/
+                script {
+                    def testServer = "ubuntu@54.166.103.54"  // Replace with actual IP
+                    def keyPath = "/home/ansible/.ssh/id_rsa"          // Adjust if different
 
-                '''
+                    sh """
+                        echo "Creating remote directory if not exists..."
+                        ssh -o StrictHostKeyChecking=no -i ${keyPath} ${testServer} 'mkdir -p ~/test-deploy'
+                        
+                        echo "Copying code to Test Server..."
+                        scp -o StrictHostKeyChecking=no -i ${keyPath} -r * ${testServer}:~/test-deploy/
+                    """
+                }
             }
         }
     }
 }
-
