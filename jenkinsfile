@@ -2,31 +2,27 @@ pipeline {
     agent any
 
     stages {
+        stage('Declarative: Checkout SCM') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Clone Code') {
             steps {
-                git branch: 'develop', url: 'https://github.com/dhanushlm/capstone-Project-1.git'
+                echo 'Cloning the source code from GitHub...'
+                sh 'git --version'
+                sh 'ls -al'
             }
         }
 
         stage('Deploy to Test Server') {
             steps {
-                script {
-                    def testServer = "ubuntu@54.166.103.54"
-                    // No need to define keyPath here anymore
-
-                    // Use withCredentials to get the SSH key
-                    withCredentials([sshUserPrivateKey(credentialsId: 'test-server-ssh-key', keyFileVariable: 'MY_SSH_KEY')]) {
-                        sh """
-                            echo "Creating remote directory..."
-                            // Use the keyFileVariable provided by withCredentials
-                            ssh -o StrictHostKeyChecking=no -i ${MY_SSH_KEY} ${testServer} 'mkdir -p ~/test-deploy'
-
-                            echo "Copying code to Test Server..."
-                            // Use the keyFileVariable provided by withCredentials
-                            scp -o StrictHostKeyChecking=no -i ${MY_SSH_KEY} -r * ${testServer}:~/test-deploy/
-                        """
-                    }
-                }
+                echo 'Simulating deploy by copying to /tmp/test-deploy...'
+                sh '''
+                    mkdir -p /tmp/test-deploy
+                    cp -r * /tmp/test-deploy/
+                '''
             }
         }
     }
