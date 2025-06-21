@@ -12,15 +12,20 @@ pipeline {
             steps {
                 script {
                     def testServer = "ubuntu@54.166.103.54"
-                    def keyPath = "/home/ansible/.ssh/id_rsa"
+                    // No need to define keyPath here anymore
 
-                    sh """
-                        echo "Creating remote directory..."
-                        ssh -o StrictHostKeyChecking=no -i ${keyPath} ${testServer} 'mkdir -p ~/test-deploy'
+                    // Use withCredentials to get the SSH key
+                    withCredentials([sshUserPrivateKey(credentialsId: 'test-server-ssh-key', keyFileVariable: 'MY_SSH_KEY')]) {
+                        sh """
+                            echo "Creating remote directory..."
+                            // Use the keyFileVariable provided by withCredentials
+                            ssh -o StrictHostKeyChecking=no -i ${MY_SSH_KEY} ${testServer} 'mkdir -p ~/test-deploy'
 
-                        echo "Copying code to Test Server..."
-                        scp -o StrictHostKeyChecking=no -i ${keyPath} -r * ${testServer}:~/test-deploy/
-                    """
+                            echo "Copying code to Test Server..."
+                            // Use the keyFileVariable provided by withCredentials
+                            scp -o StrictHostKeyChecking=no -i ${MY_SSH_KEY} -r * ${testServer}:~/test-deploy/
+                        """
+                    }
                 }
             }
         }
