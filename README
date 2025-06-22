@@ -1,0 +1,24 @@
+"CI/CD Pipeline Using Jenkins, Ansible, Docker, and GitHub on AWS"
+
+Project Overview:
+This project demonstrates a fully automated CI/CD pipeline implementation using Jenkins multibranch pipelines, Ansible for configuration management, GitHub as source control, and Docker for production deployments — all hosted on AWS EC2 instance
+
+---
+
+Tools:
+- Jenkins (Multibranch Pipeline)
+- Ansible (Server provisioning)
+- GitHub (Source Code Management)
+- Docker (Containerization)
+- AWS EC2 (Infrastructure)
+- Groovy (Jenkinsfile)
+- Linux (Ubuntu)
+
+---
+
+Architecture:
+- Jenkins Master Node** on `t2.large` EC2 instance  
+- Test Node** (for develop branch) on `t2.micro`  
+- Production Node** (for master branch) on `t2.micro`  
+- Docker runs only on the **prod node**  
+- Ansible used to install required software (Java, Docker, Jenkins)
