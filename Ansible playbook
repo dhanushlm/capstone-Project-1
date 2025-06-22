@@ -1,0 +1,32 @@
+- name: installing java and jenkins in master
+  hosts: localhost # localhost is the control node or the same host where this playbook is running
+  become: true
+  tasks:
+    - name: install java
+      script: master.sh
+- name: install java and docker in workers
+  hosts: all # all hosts in the inventory file
+  become: true
+  tasks:
+    - name: installing java and docker
+      script: worker.sh
+
+---
+
+vi master.sh
+sudo apt update
+sudo apt install openjdk-17-jdk -y sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+    https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+ echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
+    https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+    /etc/apt/sources.list.d/jenkins.list > /dev/null
+ sudo apt-get update
+  sudo apt-get install fontconfig openjdk-17-jre -y
+  sudo apt-get install jenkins -y
+
+---
+
+vi worker.sh
+sudo apt update
+sudo apt install openjdk-17-jdk -y
+sudo apt install docker.io -y
